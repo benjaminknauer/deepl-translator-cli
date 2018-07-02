@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const program = require('commander');
-const { translate } = require('deepl-translator');
-const { version } = require('./package.json');
+const {translateWithAlternatives} = require('deepl-translator');
+const {version} = require('./package.json');
 const chalk = require('chalk');
 
 /**
@@ -10,10 +10,10 @@ const chalk = require('chalk');
  * has been read.
  */
 const read = () => new Promise((resolve, reject) => {
-  let data = '';
-  process.stdin
-    .on('data', (chunk) => data += chunk)
-    .on('end', () => resolve(data.trim()));
+    let data = '';
+    process.stdin
+        .on('data', (chunk) => data += chunk)
+        .on('end', () => resolve(data.trim()));
 });
 
 /**
@@ -21,28 +21,29 @@ const read = () => new Promise((resolve, reject) => {
  * @param {*} text the text to translate.
  */
 const translateText = (text) => {
-  translate(text, program.targetLanguage, program.sourceLanguage)
-    .then(({ translation }) => console.log(chalk.green(translation)))
-    .catch(error => console.error(chalk.bold.red(error.message)))
+    translateWithAlternatives(text, 'EN')
+        .then(res =>
+            console.log(chalk.green(res.translationAlternatives.join('\n')))
+        ).catch(error => console.error(chalk.bold.red(error.message)))
 };
 
 program
-  .version(version)
-  .arguments('[text]')
-  .option(
-    '-t, --targetLanguage <targetLanguage>',
-    'target language code (EN, DE, FR, ES, IT, NL, PL, auto)'
-  )
-  .option(
-    '-s, --sourceLanguage [sourceLanguage]',
-    'source language code (EN, DE, FR, ES, IT, NL, PL, auto)'
-  )
-  .parse(process.argv);
+    .version(version)
+    .arguments('[text]')
+    .option(
+        '-t, --targetLanguage <targetLanguage>',
+        'target language code (EN, DE, FR, ES, IT, NL, PL, auto)'
+    )
+    .option(
+        '-s, --sourceLanguage [sourceLanguage]',
+        'source language code (EN, DE, FR, ES, IT, NL, PL, auto)'
+    )
+    .parse(process.argv);
 
 if (program.rawArgs.length === 2) {
-  program.help();
+    program.help();
 } else if (!program.args.length) {
-  read().then(translateText);
+    read().then(translateText);
 } else {
-  translateText(program.args[0]);
+    translateText(program.args[0]);
 }

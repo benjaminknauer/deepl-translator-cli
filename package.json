@@ -10,7 +10,7 @@
     "release:patch": "generate-changelog -u https://github.com/vsetka/deepl-translator-cli -p && git add CHANGELOG.md && git commit -m 'updated CHANGELOG.md' && yarn version --new-version patch && git push origin && git push origin --tags"
   },
   "bin": {
-    "deepl": "./deepl.js"
+    "transl": "./deepl-translate.js"
   },
   "engineStrict": true,
   "engines": {
@@ -34,7 +34,7 @@
   "dependencies": {
     "chalk": "2.1.0",
     "commander": "2.11.0",
-    "deepl-translator": "1.1.0"
+    "deepl-translator": "1.2.0"
   },
   "devDependencies": {
     "generate-changelog": "^1.5.0",
